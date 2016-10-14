@@ -1,0 +1,539 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Welcome Home Newsletter Order Form</title>
+        <script src="http://code.jquery.com/jquery-latest.min.js"></script> <script type="text/javascript">
+// ---------------------------
+// Source: jQuery: Calculate total price orderInfoABfee on Multiple Checkbox & Radio button selection (Mukesh Chapagain's code) (http://blog.chapagain.com.np/jquery-calculate-total-price-orderInfoABfee-on-multiple-checkbox-radio-button-selection/)
+// ---------------------------
+
+// ---------------------------
+// Prevent Users from submitting form by hitting enter
+// SOURCE: http://stackoverflow.com/questions/895171/prevent-users-from-submitting-form-by-hitting-enter
+$(document).ready(function() {
+  $(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+});
+// ---------------------------
+
+// ---------------------------
+// Display Order Information A & B fee
+$(document).ready(function() {		
+		$(".orderInfoAB").click(function(event) {
+			var total = 0;
+			$(".orderInfoAB:checked").each(function() {
+				total += parseFloat($(this).val());
+			});
+			
+			if (total == 0) {
+				$('#control_COLUMN26').val('');
+			} else {				
+				$('#control_COLUMN26').val(total.toFixed(2));
+			}
+			displayTotal();
+		});
+	});
+// ---------------------------
+
+// ---------------------------
+// Display Order Information C fee (Mail List supplied fee)
+$(document).ready(function() {		
+		$(".orderInfoC").click(function(event) {
+			var total = 0;
+			$(".orderInfoC:checked").each(function() {
+				total += parseFloat($(this).val());
+			});
+			
+			if (total == 0) {
+				$('#control_COLUMN29').val('');
+			} else {				
+				$('#control_COLUMN29').val(total.toFixed(2));
+			}
+			displayTotal();
+		});
+	});
+// ---------------------------
+
+// ---------------------------
+// Display Shipping fee
+$(document).ready(function() {		
+		$(".newsletterShipping").click(function(event) {
+			var total = 0;
+			$(".newsletterShipping:checked").each(function() {
+				total += parseFloat($(this).val());
+			});
+			
+			if (total == 0) {
+				$('#control_COLUMN34').val('');
+			} else {				
+				$('#control_COLUMN34').val(total.toFixed(2));
+			}
+			displayTotal();
+		});
+	});
+// ---------------------------
+
+// ---------------------------
+// Calculate quantity for Order Information D fee (Key in mail list line item changes fee)
+// Source: Javascript & jQuery: The Missing Manual
+function displayDfee() {
+	var unitCost=0.25;
+	var quantity=$('#control_COLUMN28').val(); // get value (control_COLUMN28 is quantity)
+	var Dfee=quantity * unitCost; // control_COLUMN29 is the orderInfoCDfee total
+	Dfee=Dfee.toFixed(2);
+	$('#control_COLUMN29').val(Dfee); // set value
+	displayTotal();
+// Display Order Information D fee - oninput event (http://www.w3schools.com/jsref/event_oninput.asp)
+	document.getElementById("control_COLUMN29");
+}
+// ---------------------------
+
+// ---------------------------
+//Set up an associative array
+//The keys represent the newsletter option chosen (printing/fold/tab/mail)
+//The values represent the newsletter option "each" price
+ var newsletter_options = new Array();
+ newsletter_options["Print my information in B&W and fold to 8 ½ x 11"]=0.28;
+ newsletter_options["Print my information in B&W, fold to 5 ½ x 8 ½ with tab closure"]=0.36;
+ newsletter_options["Full Service &#8211; Print my information in B&W, fold, tab, and mail to my database"]=0.79;
+ newsletter_options["Print my information in Color and fold to 8 ½ x 11"]=0.56;
+ newsletter_options["Print my information in Color, fold to 5 ½ x 8 ½ with tab closure"]=0.64;
+ newsletter_options["Full Service &#8211; Print my information in Color, fold, tab, and mail to my database"]=1.07;
+// ---------------------------
+
+// ---------------------------
+// getNewsletterOption() finds the price based on the size of the cake.
+// Here, we need to take user's the selection from radio button selection
+function getNewsletterOption() {  
+    var newsletterOption=0;
+    //Get a reference to the form id="WELwebform"
+    var theForm = document.forms["WELwebform"];
+    //Get a reference to the cake the user Chooses name=newsletterOption":
+    var newsletterOption = theForm.elements["newsletterOption"];
+    //Here since there are 6 radio buttons newsletterOption.length = 6
+    //We loop through each radio buttons
+    for(var i = 0; i < newsletterOption.length; i++)
+    {
+        //if the radio button is checked
+        if(newsletterOption[i].checked)
+        {
+            //we set newsletterOption to the value of the selected radio button
+            //i.e. if the user choose the 8" cake we set it to 25
+            //by using the newsletter_options array
+            //We get the selected Items value
+            //For example newsletter_options["Round8".value]"
+            newsletterOption = newsletter_options[newsletterOption[i].value];
+            //If we get a match then we break out of this loop
+            //No reason to continue if we get a match
+            break;
+        }
+    }
+	displayTotal();
+    //We return the newsletterOption
+    return newsletterOption;
+}
+// ---------------------------
+
+// ---------------------------
+// Calculate quantity for Select Newsletter Option fee
+// Source: Javascript & jQuery: The Missing Manual
+function displaynewsletterFee() {
+	var unitCost=getNewsletterOption();
+	var quantity=$('#control_COLUMN31').val(); // get value (control_COLUMN31 is quantity)
+	var newsletterFee=quantity * unitCost; // control_COLUMN32 is the newsletter option total
+	newsletterFee=newsletterFee.toFixed(2);
+	$('#control_COLUMN32').val(newsletterFee); // set value
+	displayTotal();
+// Display Newsletter Option fee - oninput event (http://www.w3schools.com/jsref/event_oninput.asp)
+	document.getElementById("control_COLUMN32"); // Display newsletter option total in text box
+}
+// ---------------------------
+
+// ---------------------------
+// Calculate Grand Total
+// Source: Javascript & jQuery: The Missing Manual
+// Display total in total box - use onchange event
+function displayTotal() {
+	var a = 0;
+	var b = 0;
+	var c = 0;
+	var d = 0;
+	if ($('#control_COLUMN26').val() > "") {
+		a=parseFloat($('#control_COLUMN26').val()); // get value of control_COLUMN26	
+	}
+	if ($('#control_COLUMN29').val() > "") {
+		b=parseFloat($('#control_COLUMN29').val()); // get value of control_COLUMN29	
+	}
+	if ($('#control_COLUMN32').val() > "") {
+		c=parseFloat($('#control_COLUMN32').val()); // get value of control_COLUMN32	
+	}
+	if ($('#control_COLUMN34').val() > "") {
+		d=parseFloat($('#control_COLUMN34').val()); // get value of control_COLUMN34
+	}
+	var grandTotal=parseFloat(a + b + c + d); //
+	console.log(a);
+	console.log(b);
+	console.log(c);
+	console.log(d);
+	console.log(grandTotal);
+	var gt=grandTotal.toFixed(2);
+	$('#control_COLUMN35').val(gt); // set value
+}
+// ---------------------------
+</script>
+    </head>
+    <body>
+        <form method="post" action="http://tpi.mkt6560.com/136242WEL-Webform/webform-code" pageid="5474805" siteid="182598" parentpageid="5474803" id="WELwebform">
+            <table width="800" style="border: 1px solid black;" align="center" cellpadding="0" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td height="1247" align="center" valign="top">
+                        <table width="800" border="0" align="center" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td align="center" valign="middle">&nbsp;</td>
+                                    <td align="center" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="middle"><img src="https://s3.amazonaws.com/portfolio-dk/webform-welcome-home/images/welcome-home-logo-web.png" width="310" height="77" alt="Welcome Home Logo" /></td>
+                                    <td align="center" valign="middle"><span style="font-family: Arial,sans-serif; color: #cf112b; font-size: 18px; font-weight: bold">Your Consumer-Direct Newsletter Order Form</span></td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="middle">&nbsp;</td>
+                                    <td align="center" valign="middle">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table width="775" border="0" align="center" cellpadding="5" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td width="346" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 16px; font-weight: bold">Name <input type="text" name="Name" tabindex="1" id="control_COLUMN1" label="Name" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></span></td>
+                                    <td width="417" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 16px; font-weight: bold">Company Name <input type="text" name="Company Name" tabindex="2" id="control_COLUMN2" label="Company Name" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table width="775" border="0" align="center" cellpadding="5" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 16px; font-weight: bold">This is a</span></td>
+                                    <td colspan="3" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 16px; font-weight: bold">I would like to receive newsletters</span></td>
+                                </tr>
+                                <tr>
+                                    <td width="101" align="left" valign="top"><input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Order" tabindex="3" id="control_COLUMN3_0" label="Order" value="New order" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">New order</span></td>
+                                    <td width="254" align="left" valign="top"><input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Order" id="control_COLUMN3_1" label="Order" value="Change to my current order" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Change to my current order</span></td>
+                                    <td width="103" align="left" valign="top"><input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Frequency" tabindex="4" id="control_COLUMN4_0" label="Frequency" value="Monthly (12 times/year)" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Monthly<br />
+                                    (12 times/year)</span></td>
+                                    <td width="120" align="left" valign="top"><input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Frequency" id="control_COLUMN4_1" label="Frequency" value="Bi-monthly (6 times/year)" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Bi-monthly<br />
+                                    (6 times/year)</span></td>
+                                    <td width="122" align="left" valign="top"><input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Frequency" id="control_COLUMN4_2" label="Frequency" value="Quarterly (4 times/year)" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Quarterly<br />
+                                    (4 times/year)</span></td>
+                                </tr>
+                                <tr>
+                                    <td align="left" valign="top">&nbsp;</td>
+                                    <td align="left" valign="top">&nbsp;</td>
+                                    <td align="left" valign="top">&nbsp;</td>
+                                    <td align="left" valign="top">&nbsp;</td>
+                                    <td align="left" valign="top">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table width="775" style="border: 1px solid black;" align="center" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td height="336" align="center" valign="middle">
+                                    <table width="760" border="0" align="center" cellpadding="3" cellspacing="0">
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="3" align="left" valign="top">&nbsp;</td>
+                                                <td colspan="2" align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 16px; font-weight: bold">Imprint Information</span></td>
+                                                <td colspan="2" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 16px; font-weight: bold">Photo<br />
+                                                </span><span style="font-family: Arial,sans-serif; color: #000000; font-size: 11px; font-weight: normal">(Photo saved at 300 dpi as either a .jpeg or .tif works best.)</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Name: <input type="text" name="Imprint Name" tabindex="5" id="control_COLUMN5" label="Imprint Name" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></span></td>
+                                                <td colspan="2" rowspan="3" align="left" valign="top"><input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Imprint Photo" tabindex="22" id="control_COLUMN23_0" label="Imprint Photo" value="Photo sent via e-mail" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Photo sent via e-mail to <a href="mailto:welcomehome@the-printer.com" title="Email to welcomehome@the-printer.com" xthyperlink="347234" xt="SPCLICK" xtlinkname="mailtowelcomehometheprintercom" name="mailtowelcomehometheprintercom">welcomehome@the-printer.com</a></span><br />
+                                                <input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Imprint Photo" id="control_COLUMN23_1" label="Imprint Photo" value="Use my photo on file" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Use my photo on file</span><br />
+                                                <input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Imprint Photo" id="control_COLUMN23_2" label="Imprint Photo" value="Do not use my photo" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Do not use my photo</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Title: <input type="text" name="Imprint Title" tabindex="6" id="control_COLUMN6" label="Imprint Title" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Add Equal Housing Logo(s)</span></td>
+                                                <td width="94" align="left" valign="top"><input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Imprint Logo" tabindex="7" id="control_COLUMN8_0" label="Imprint Logo" value="Opportunity" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Opportunity</span></td>
+                                                <td width="107" align="left" valign="top"><input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Imprint Logo" id="control_COLUMN8_1" label="Imprint Logo" value="Lender" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Lender</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Company Name: <input type="text" name="Imprint Company Name" tabindex="8" id="control_COLUMN9" label="Imprint Company Name" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></span></td>
+                                                <td colspan="2" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 16px; font-weight: bold">Special Message Imprint Area</span> <span style="font-family: Arial,sans-serif; color: #000000; font-size: 11px; font-weight: normal">Limit 25 words</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Address 1: <input type="text" name="Imprint Address 1" tabindex="9" id="control_COLUMN10" label="Imprint Address 1" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></span></td>
+                                                <td width="333" colspan="2" rowspan="8" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal"><textarea rows="7" cols="40" name="Imprint Special Message" tabindex="23" id="control_COLUMN24"></textarea></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td height="19" colspan="3" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Address 2: <input type="text" name="Imprint Address 2" tabindex="10" id="control_COLUMN11" label="Imprint Address 2" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">City: <input type="text" name="Imprint City" tabindex="11" id="control_COLUMN12" label="Imprint City" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 150px;" /></span></td>
+                                                <td align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">State: <input type="text" name="Imprint State" tabindex="12" id="control_COLUMN13" label="Imprint State" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 25px;" /></span></td>
+                                                <td align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Zip: <input type="text" name="Imprint Zip" tabindex="13" id="control_COLUMN14" label="Imprint Zip" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 75px;" /></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="191" height="26" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Phone Description: <input type="text" name="Imprint Phone Type 1" tabindex="14" id="control_COLUMN15" label="Imprint Phone Type 1" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 60px;" /></span></td>
+                                                <td colspan="2" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Phone #: <input type="text" name="Imprint Phone 1" tabindex="15" id="control_COLUMN16" label="Imprint Phone 1" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 125px;" /></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Phone Description: <input type="text" name="Imprint Phone Type 2" tabindex="16" id="control_COLUMN17" label="Imprint Phone Type 2" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 60px;" /></span></td>
+                                                <td colspan="2" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Phone #: <input type="text" name="Imprint Phone 2" tabindex="17" id="control_COLUMN18" label="Imprint Phone 2" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 125px;" /></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Phone Description: <input type="text" name="Imprint Phone Type 3" tabindex="18" id="control_COLUMN19" label="Imprint Phone Type 3" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 60px;" /></span></td>
+                                                <td colspan="2" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Phone #: <input type="text" name="Imprint Phone 3" tabindex="19" id="control_COLUMN20" label="Imprint Phone 3" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 125px;" /></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Email: <input type="text" name="Imprint Email" tabindex="20" id="control_COLUMN21" label="Imprint Email" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Website: <input type="text" name="Imprint Website" tabindex="21" id="control_COLUMN22" label="Imprint Website" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" align="left" valign="top">&nbsp;</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table width="775" border="0" align="center" cellpadding="3" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2">&nbsp;</td>
+                                    <td width="98">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 16px; font-weight: bold">Order Information</span></td>
+                                    <td align="right" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td align="left" valign="middle"><input class="orderInfoAB" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="orderInfoAB" tabindex="24" id="control_COLUMN25_0" label="orderInfoAB" value="30.00" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">New subscriber imprint set up. Information supplied above.</span></td>
+                                    <td align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">One time fee @ $30.00</span></td>
+                                    <td rowspan="2" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">$ <input type="text" readonly name="orderInfoABfee" id="control_COLUMN26" style="margin: 0 0px 0px 0px; height: 20px; width: 70px;" /></span></td>
+                                </tr>
+                                <tr>
+                                    <td align="left" valign="middle"><input class="orderInfoAB" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="orderInfoAB" tabindex="25" id="control_COLUMN25_1" label="orderInfoAB" value="15.00" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Art change to my current subscription. Changes supplied above.</span></td>
+                                    <td align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">One time fee @ $15.00</span></td>
+                                </tr>
+                                <tr>
+                                    <td align="left" valign="middle"><input class="orderInfoC" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="orderInfoCD" tabindex="25" id="control_COLUMN27_0" label="orderInfoCD" value="15.00" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Mail List supplied in MS Excel Set up/Change fee.</span></td>
+                                    <td align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">One time fee @ $15.00</span></td>
+                                    <td rowspan="2" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">$ <input type="text" readonly name="orderInfoCDfee" id="control_COLUMN29" label="orderInfoCDfee" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 70px;" /></span></td>
+                                </tr>
+                                <tr>
+                                    <td width="464" align="left" valign="top"><input class="orderInfoD" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="orderInfoCD" id="control_COLUMN27_1" label="orderInfoCD" value="5.00" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Key in mail list line item changes</span></td>
+                                    <td width="195" align="left" valign="top"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Quantity              <input type="text" name="orderInfoDquantity" tabindex="26" id="control_COLUMN28" label="orderInfoDquantity" class="textInput defaultText" oninput="displayDfee()" style="margin: 0 0px 0px 0px; height: 20px; width: 35px;" /> @ $0.25 each</span><br />
+                                    <span style="font-family: Arial,sans-serif; color: #000000; font-size: 11px; font-weight: normal">($5.00 minimum)</span></td>
+                                </tr>
+                                <tr>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td align="right" valign="middle">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table width="775" border="0" align="center" cellpadding="3" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td colspan="3">&nbsp;</td>
+                                    <td width="97">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td width="465" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 16px; font-weight: bold">Select Newsletter Option</span> (<span style="font-family: Arial,sans-serif; color: #000000; font-size: 11px; font-weight: normal">Minimum order is 100, additional increments of 25)</span></td>
+                                    <td width="110" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Quantity: <input type="text" name="newsletterOptionQuantity" tabindex="28" id="control_COLUMN31" label="newsletterOptionQuantity" class="textInput defaultText" oninput="displaynewsletterFee()" style="margin: 0 0px 0px 0px; height: 20px; width: 35px;" /></span></td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">$ <input type="text" readonly name="newsletterOptionFee" id="control_COLUMN32" label="newsletterOptionFee" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 70px;" /></span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" align="left" valign="middle"><input class="newsletterOption" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="newsletterOption" tabindex="27" id="control_COLUMN30_0" label="newsletterOption" value="Print my information in B&W and fold to 8 &frac12; x 11" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Print my information in B&amp;W and fold to 8 &frac12; x 11 ($0.28 each)</span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="left" valign="middle"><input class="newsletterOption" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="newsletterOption" id="control_COLUMN30_1" label="newsletterOption" value="Print my information in B&W, fold to 5 &frac12; x 8 &frac12; with tab closure" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Print my information in B&amp;W, fold to 5 &frac12; x 8 &frac12; with tab closure (ready for mailing) ($0.36 each)</span></td>
+                                    <td width="79" align="left" valign="middle">&nbsp;</td>
+                                    <td align="right" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="left" valign="middle"><input class="newsletterOption" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="newsletterOption" id="control_COLUMN30_2" label="newsletterOption" value="Full Service &ndash; Print my information in B&W, fold, tab, and mail to my database" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Full Service &ndash; Print my information in B&amp;W, fold, tab, and mail to my database ($0.79 each)</span></td>
+                                    <td width="79" align="left" valign="middle">&nbsp;</td>
+                                    <td align="right" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="left" valign="middle"><input class="newsletterOption" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="newsletterOption" id="control_COLUMN30_3" label="newsletterOption" value="Print my information in Color and fold to 8 &frac12; x 11" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Print my information in Color and fold to 8 &frac12; x 11 ($0.56 each)</span></td>
+                                    <td width="79" align="left" valign="middle">&nbsp;</td>
+                                    <td align="right" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="left" valign="middle"><input class="newsletterOption" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="newsletterOption" id="control_COLUMN30_4" label="newsletterOption" value="Print my information in Color, fold to 5 &frac12; x 8 &frac12; with tab closure" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Print my information in Color, fold to 5 &frac12; x 8 &frac12; with tab closure (ready for mailing) ($0.64 each)</span></td>
+                                    <td width="79" align="left" valign="middle">&nbsp;</td>
+                                    <td align="right" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="left" valign="middle"><input class="newsletterOption" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="newsletterOption" id="control_COLUMN30_5" label="newsletterOption" value="Full Service &ndash; Print my information in Color, fold, tab, and mail to my database" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Full Service &ndash; Print my information in Color, fold, tab, and mail to my database ($1.07 each)</span></td>
+                                    <td width="79" align="left" valign="middle">&nbsp;</td>
+                                    <td align="right" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="left" valign="middle">&nbsp;</td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td align="right" valign="middle">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table width="775" border="0" align="center" cellpadding="3" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td colspan="6" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 16px; font-weight: bold">Newsletter Shipping/Handling Fees</span></td>
+                                </tr>
+                                <tr>
+                                    <td width="131" align="left" valign="middle"><input class="newsletterShipping" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="newsletterShipping" tabindex="29" id="control_COLUMN33_0" label="newsletterShipping" value="9.80" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">100-249 @ $9.80</span></td>
+                                    <td width="141" align="left" valign="middle"><input class="newsletterShipping" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="newsletterShipping" tabindex="30" id="control_COLUMN33_1" label="newsletterShipping" value="11.95" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">250-499 @ $11.95</span></td>
+                                    <td width="137" align="left" valign="middle"><input class="newsletterShipping" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="newsletterShipping" tabindex="31" id="control_COLUMN33_2" label="newsletterShipping" value="18.75" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">500-999 @ $18.75</span></td>
+                                    <td colspan="2" align="left" valign="middle"><input class="newsletterShipping" type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="newsletterShipping" tabindex="32" id="control_COLUMN33_3" label="newsletterShipping" value="29.60" onClick="displayTotal()" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">1000 &amp; over @ $29.60</span></td>
+                                    <td width="97" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">$ <input type="text" readonly name="newsletterShippingFee" id="control_COLUMN34" style="margin: 0 0px 0px 0px; height: 20px; width: 70px;" /></span></td>
+                                </tr>
+                                <tr>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td colspan="2" align="left" valign="middle">&nbsp;</td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 16px; font-weight: bold">TOTAL</span></td>
+                                    <td align="left" valign="middle">$ <input type="text" readonly name="TOTAL" id="control_COLUMN35" label="TOTAL" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 70px;" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table width="750" border="0" align="center" cellpadding="3" cellspacing="0">
+                        </table>
+                        <table width="750" border="0" align="center" cellpadding="3" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td><hr style="color:#000000; height: 1px; background-color: #000000;" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table width="775" border="0" align="center" cellpadding="3" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td colspan="3" align="left" valign="middle">&nbsp;</td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td colspan="4" align="left" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 16px; font-weight: bold">Shipping Information</span> <span style="font-family: Arial,sans-serif; color: #000000; font-size: 11px; font-weight: normal">(NO Post Office Boxes, please)</span></td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td colspan="4" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 16px; font-weight: bold">Payment Information</span></td>
+                                </tr>
+                                <tr valign="middle">
+                                    <td align="left" valign="middle"><input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Shipping Information" tabindex="30" id="control_COLUMN36_0" label="Shipping Information" value="Address Listed Above" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Address Listed Above</span></td>
+                                    <td colspan="2" align="left" valign="middle"><input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Shipping Information" id="control_COLUMN36_1" label="Shipping Information" value="Alternate Address Below" /><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Alternate Address Below</span></td>
+                                    <td width="30" align="left" valign="middle">&nbsp;</td>
+                                    <td width="95" align="left" valign="middle"><input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Credit Card Type" tabindex="38" id="control_COLUMN44_0" label="Credit Card Type" value="American Express" /><img src="https://s3.amazonaws.com/portfolio-dk/webform-welcome-home/images/americanexpress.png" width="37" height="23" alt="American Express" /></td>
+                                    <td width="91" align="left" valign="middle"><input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Credit Card Type" id="control_COLUMN44_1" label="Credit Card Type" value="Visa" /><img src="https://s3.amazonaws.com/portfolio-dk/webform-welcome-home/images/visa.png" width="37" height="23" alt="Visa" /></td>
+                                    <td width="88" align="left" valign="middle"><input type="radio" style="margin: 0px 4px 0px 0px; width: 13px;" name="Credit Card Type" id="control_COLUMN44_2" label="Credit Card Type" value="MasterCard" /><img src="https://s3.amazonaws.com/portfolio-dk/webform-welcome-home/images/mastercard.png" width="37" height="23" alt="Master Card" /></td>
+                                    <td width="31" align="left" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr valign="middle">
+                                    <td colspan="3" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Name: <input type="text" name="Shipping Name" tabindex="31" id="control_COLUMN37" label="Shipping Name" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></span></td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td colspan="4" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Card Number:</span></td>
+                                </tr>
+                                <tr valign="middle">
+                                    <td colspan="3" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Company Name: <input type="text" name="Shipping Company Name" tabindex="32" id="control_COLUMN38" label="Shipping Company Name" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></span></td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td colspan="4" align="left" valign="middle"><input type="text" name="Credit Card Number" tabindex="39" id="control_COLUMN45" label="Credit Card Number" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></td>
+                                </tr>
+                                <tr valign="middle">
+                                    <td colspan="3" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Address 1: <input type="text" name="Shipping Adress1" tabindex="33" id="control_COLUMN39" label="Shipping Adress1" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></span></td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td colspan="4" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Valid Through:</span></td>
+                                </tr>
+                                <tr valign="middle">
+                                    <td colspan="3" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Address 2: <input type="text" name="Shipping Address2" tabindex="34" id="control_COLUMN40" label="Shipping Address2" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></span></td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td colspan="4" align="left" valign="middle"><input type="text" name="Credit Card Expiration" tabindex="40" id="control_COLUMN46" label="Credit Card Expiration" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 250px;" /></td>
+                                </tr>
+                                <tr valign="middle">
+                                    <td width="189" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">City: <input type="text" name="Shipping City" tabindex="35" id="control_COLUMN41" label="Shipping City" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 150px;" /></span></td>
+                                    <td width="91" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">State: <input type="text" name="Shipping State" tabindex="36" id="control_COLUMN42" label="Shipping State" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 25px;" /></span></td>
+                                    <td width="112" align="left" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal">Zip: <input type="text" name="Shipping Zip" tabindex="37" id="control_COLUMN43" label="Shipping Zip" class="textInput defaultText" style="margin: 0 0px 0px 0px; height: 20px; width: 75px;" /></span></td>
+                                    <td colspan="5" align="left" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr valign="middle">
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td colspan="5" align="left" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr valign="middle">
+                                    <td colspan="8" align="center" valign="middle"><input type="submit" class="defaultText buttonStyle" value="Send to Welcome Home" style="color: #ffffff; background-color:#cf112b; height: 40px; width: 250px; font-size: 14px; font-weight: bold" /><input type="hidden" name="formSourceName" value="StandardForm" /><!-- DO NOT REMOVE HIDDEN FIELD sp_exp --><input type="hidden" name="sp_exp" value="yes" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table width="775" border="0" align="center" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td align="center" valign="middle">&nbsp;</td>
+                                    <td align="center" valign="middle">&nbsp;</td>
+                                    <td align="center" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td width="15" align="center" valign="middle">&nbsp;</td>
+                                    <td width="501" align="center" valign="middle"><span style="font-family: Arial,sans-serif; color: #000000; font-size: 12px; font-weight: normal">Complete all information requested. One order per form. Keep a copy for your records. Deadline is the 25th of the month or approximately 35 days prior to the issue date. Cancellations must be received in writing 60 days prior to issue date. Your credit card will automatically be billed prior to each publication release date unless you provide written notification of change.</span></td>
+                                    <td width="15" align="center" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="middle">&nbsp;</td>
+                                    <td align="center" valign="middle">&nbsp;</td>
+                                    <td align="center" valign="middle">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table width="775" border="0" align="center" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td width="25" align="center" valign="middle">&nbsp;</td>
+                                    <td width="400" align="center" valign="middle"><span style="font-family: Arial,sans-serif; color: #cf112b; font-size: 16px; font-weight: bold">Customer Service</span><br />
+                                    <span style="font-family: Arial,sans-serif; color: #cf112b; font-size: 16px; font-weight: normal">1-888-900-5529 (Toll Free) &bull; welcomehome@the-printer.com</span><br />
+                                    <br />
+                                    <span style="font-family: Arial,sans-serif; color: #cf112b; font-size: 16px; font-weight: bold">Fax Orders to</span><br />
+                                    <span style="font-family: Arial,sans-serif; color: #cf112b; font-size: 16px; font-weight: normal">515-288-9234</span><br />
+                                    <br />
+                                    <span style="font-family: Arial,sans-serif; color: #000000; font-size: 13px; font-weight: normal"><em>Welcome Home</em> &bull; A Division of The Printer, Inc. &bull; 1220 Thomas Beck Road &bull; Des Moines, IA 50315</span></td>
+                                    <td width="25" align="center" valign="middle">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="middle">&nbsp;</td>
+                                    <td align="center" valign="middle">&nbsp;</td>
+                                    <td align="center" valign="middle">&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </body>
+</html>
